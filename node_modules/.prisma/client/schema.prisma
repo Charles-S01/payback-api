@@ -1,0 +1,53 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String         @id
+  firstName           String
+  lastName            String
+  username            String         @unique
+  password            String
+  createdAt           DateTime       @default(now())
+  owes                Owe[]          @relation("userId")
+  moneyRequestCreate  MoneyRequest[] @relation("MyRequest")
+  moneyRequestReceive MoneyRequest[] @relation("RecieveRequest")
+}
+
+model Owe {
+  id             Int           @id @default(autoincrement())
+  oweAmount      Float
+  createdAt      DateTime      @default(now())
+  debtDirection  DebtDirection
+  description    String?
+  isPaid         Boolean       @default(false)
+  user           User          @relation("userId", fields: [userId], references: [id])
+  userId         String
+  otherPartyName String
+}
+
+model MoneyRequest {
+  id         Int      @id @default(autoincrement())
+  amount     Float
+  createdAt  DateTime @default(now())
+  creator    User     @relation("MyRequest", fields: [creatorId], references: [id])
+  creatorId  String
+  receiver   User     @relation("RecieveRequest", fields: [receiverId], references: [id])
+  receiverId String
+}
+
+enum DebtDirection {
+  OweToMe
+  OweToOther
+}
