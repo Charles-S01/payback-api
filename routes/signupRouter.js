@@ -7,7 +7,7 @@ const bcrypt = require("bcryptjs")
 signupRouter.post("/", async (req, res) => {
     console.log("sign up middleware ran")
     const { firstName, lastName, username, password } = req.body
-    const foundUsername = await prisma.user.findFirst({
+    const foundUsername = await prisma.user.findUnique({
         where: {
             username: username,
         },

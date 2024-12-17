@@ -3,7 +3,7 @@ const prisma = require("./prisma/prisma")
 async function main() {
     console.log("main() ran")
 
-    await prisma.user.deleteMany()
+    await prisma.debt.deleteMany()
     // const users = await prisma.user.findMany()
     // console.log(users)
 }
