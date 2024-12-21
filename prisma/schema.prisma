@@ -41,6 +41,7 @@ model MoneyRequest {
   id         Int      @id @default(autoincrement())
   amount     Float
   createdAt  DateTime @default(now())
+  message    String?
   creator    User?    @relation("MyRequest", fields: [creatorId], references: [id])
   creatorId  String
   receiver   User?    @relation("RecieveRequest", fields: [receiverId], references: [id])

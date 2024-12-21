@@ -5,69 +5,47 @@ const userDataRouter = Router()
 const { v4: uuidv4 } = require("uuid")
 const bcrypt = require("bcryptjs")
 
+userDataRouter.get("/search/:userId?", async (req, res, next) => {
+    try {
+        console.log("users search ran")
+        const { firstName, lastName, username } = req.query
+        const { userId } = req.params
+        // console.log("users/search userId:" + userId)
+
+        const users = await prisma.user.findMany({
+            where: {
+                ...(userId && { id: userId }),
+                ...(firstName && { firstName: { startsWith: firstName, mode: "insensitive" } }),
+                ...(lastName && { lastName: { startsWith: lastName, mode: "insensitive" } }),
+                ...(username && { username: { startsWith: username, mode: "insensitive" } }),
+            },
+            select: {
+                id: true,
+                firstName: true,
+                lastName: true,
+                username: true,
+            },
+        })
+        // console.log(users)
+        res.json({ users })
+    } catch (err) {
+        next(err)
+    }
+})
+
+// get logged in user data
 userDataRouter.get("/", verifyToken, async (req, res, next) => {
+    console.log("users get / ran")
+
     try {
         const userId = req.user.id
-        const userData = await prisma.user.findUnique({
+        const user = await prisma.user.findUnique({
             where: {
                 id: userId,
             },
-            include: {
-                debts: true,
-                moneyRequestReceive: true,
-            },
         })
-
-        const moneyToUser = await prisma.debt.findMany({
-            where: {
-                userId: userId,
-                isOwedToUser: true,
-                isPaid: false,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        })
-        const moneyToOthers = await prisma.debt.findMany({
-            where: {
-                userId: userId,
-                isOwedToUser: false,
-                isPaid: false,
-            },
-            orderBy: {
-                createdAt: "desc",
-            },
-        })
-
-        const totalOweToUser = await prisma.debt.aggregate({
-            _sum: {
-                oweAmount: true,
-            },
-            where: {
-                userId: userId,
-                isOwedToUser: true,
-                isPaid: false,
-            },
-        })
-
-        const totalOweToOthers = await prisma.debt.aggregate({
-            _sum: {
-                oweAmount: true,
-            },
-            where: {
-                userId: userId,
-                isOwedToUser: false,
-                isPaid: false,
-            },
-        })
-
-        res.json({
-            user: userData,
-            totalOweToUser: totalOweToUser._sum.oweAmount,
-            totalOweToOthers: totalOweToOthers._sum.oweAmount,
-            moneyToUser,
-            moneyToOthers,
-        })
+        // console.log(user)
+        res.json({ user })
     } catch (err) {
         next(err)
     }
@@ -105,14 +83,15 @@ userDataRouter.post("/", async (req, res) => {
     })
 })
 
-userDataRouter.put("/:userId", verifyToken, async (req, res, next) => {
+// update user
+userDataRouter.put("/", verifyToken, async (req, res, next) => {
     try {
-        const { userId } = req.params
+        // const { userId } = req.params
         const { firstName, lastName } = req.body
 
         const updatedUser = await prisma.user.update({
             where: {
-                id: userId,
+                id: req.user.id,
             },
             data: {
                 firstName: firstName,

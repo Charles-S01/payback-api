@@ -1,6 +1,8 @@
 var jwt = require("jsonwebtoken")
 
 function verifyToken(req, res, next) {
+    console.log("verifyToken ran")
+
     const bearerHeader = req.headers["authorization"]
     if (!bearerHeader) {
         // throw new Error("Could not find bearer header")
@@ -14,7 +16,6 @@ function verifyToken(req, res, next) {
     jwt.verify(token, "secretKey", (err, decodedToken) => {
         if (err) {
             return next(err)
-            // return res.status(403).json({ errorMessage: "Token verification failed" })
         }
         req.user = decodedToken
         next()

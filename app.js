@@ -13,8 +13,9 @@ app.use(express.urlencoded({ extended: true }))
 
 app.use("/log-in", routes.loginRouter)
 // app.use("/sign-up", routes.signupRouter)
-app.use("/userData", routes.userDataRouter)
+app.use("/users", routes.userDataRouter)
 app.use("/debts", routes.debtRouter)
+app.use("/money-request", routes.moneyRequestsRouter)
 app.use((err, req, res, next) => {
     console.error(err.stack)
     res.status(500).json({ errorMessage: "Internal Server Error" })
