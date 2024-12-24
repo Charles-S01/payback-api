@@ -23,22 +23,32 @@ loginRouter.post("/", async (req, res, next) => {
             return res.status(400).json({ errorMessage: "Invalid password" })
         }
 
-        jwt.sign(
+        const token = jwt.sign(
             {
                 id: retreivedUser.id,
             },
-            "secretKey",
-            // { expiresIn: "5s" },
-            (error, token) => {
-                if (error) {
-                    return res.json({
-                        errorMessage: "There was an error signing the token",
-                    })
-                }
-                console.log("jwt signed token")
-                res.json({ token: token, message: "Successfuly logged in" })
-            }
+            process.env.ACCESS_TOKEN_SECRET,
+            { expiresIn: "15m" }
         )
+
+        const refreshToken = jwt.sign(
+            {
+                id: retreivedUser.id,
+                username: retreivedUser.username,
+            },
+            process.env.REFRESH_TOKEN_SECRET,
+            { expiresIn: "15d" }
+        )
+
+        // Assigning refresh token in http-only cookie
+        res.cookie("jwt", refreshToken, {
+            httpOnly: true,
+            sameSite: "None",
+            secure: true,
+            maxAge: 24 * 60 * 60 * 1000,
+        })
+
+        res.json({ token, refreshToken, message: "Successfuly logged in" })
     } catch (err) {
         next(err)
     }

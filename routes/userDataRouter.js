@@ -5,7 +5,8 @@ const userDataRouter = Router()
 const { v4: uuidv4 } = require("uuid")
 const bcrypt = require("bcryptjs")
 
-userDataRouter.get("/search/:userId?", async (req, res, next) => {
+// search for users
+userDataRouter.get("/search/:userId?", verifyToken, async (req, res, next) => {
     try {
         console.log("users search ran")
         const { firstName, lastName, username } = req.query
@@ -35,7 +36,7 @@ userDataRouter.get("/search/:userId?", async (req, res, next) => {
 
 // get logged in user data
 userDataRouter.get("/", verifyToken, async (req, res, next) => {
-    console.log("users get / ran")
+    // console.log("users get / ran")
 
     try {
         const userId = req.user.id
@@ -52,38 +53,37 @@ userDataRouter.get("/", verifyToken, async (req, res, next) => {
 })
 
 // sign up
-userDataRouter.post("/", async (req, res) => {
-    console.log("userData post middleware ran")
-    const { firstName, lastName, username, password } = req.body
-    const foundUsername = await prisma.user.findUnique({
-        where: {
-            username: username,
-        },
-    })
-    if (foundUsername) {
-        return res.status(400).json({ errorMessage: "Username already exists" })
-    }
+// userDataRouter.post("/", async (req, res) => {
+//     console.log("userData post middleware ran")
+//     const { firstName, lastName, username, password } = req.body
+//     const foundUsername = await prisma.user.findUnique({
+//         where: {
+//             username: username,
+//         },
+//     })
+//     if (foundUsername) {
+//         return res.status(400).json({ errorMessage: "Username already exists" })
+//     }
 
-    bcrypt.hash(password, 10, async (err, hashedPassword) => {
-        if (err) return next(err)
+//     bcrypt.hash(password, 10, async (err, hashedPassword) => {
+//         if (err) return next(err)
 
-        // else, store hashedPassword in DB
-        const user = await prisma.user.create({
-            data: {
-                id: uuidv4(),
-                firstName: firstName,
-                lastName: lastName,
-                username: username,
-                password: hashedPassword,
-            },
-        })
-        const users = await prisma.user.findMany()
-        console.log(users)
-        res.json({ message: "Successfully added user", user: user })
-    })
-})
+//         // else, store hashedPassword in DB
+//         const user = await prisma.user.create({
+//             data: {
+//                 id: uuidv4(),
+//                 firstName: firstName,
+//                 lastName: lastName,
+//                 username: username,
+//                 password: hashedPassword,
+//             },
+//         })
+//         const users = await prisma.user.findMany()
+//         console.log(users)
+//         res.json({ message: "Successfully added user", user: user })
+//     })
+// })
 
-// update user
 userDataRouter.put("/", verifyToken, async (req, res, next) => {
     try {
         // const { userId } = req.params
