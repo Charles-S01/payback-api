@@ -20,6 +20,7 @@ app.use(cookieParser())
 
 // app.use("/log-in", routes.loginRouter)
 // app.use("/sign-up", routes.signupRouter)
+app.use("/auth", routes.authRouter)
 app.use("/users", routes.userDataRouter)
 app.use("/debts", routes.debtRouter)
 app.use("/money-request", routes.moneyRequestsRouter)
@@ -29,5 +30,5 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(process.env.PORT || 3000, () => {
-    console.log("Server is runnin' on port 3000 !!")
+    console.log("Server is runnin' on port " + (process.env.PORT || 3000))
 })
