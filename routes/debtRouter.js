@@ -4,7 +4,7 @@ const prisma = require("../prisma/prisma")
 const { verifyToken } = require("../verifyToken")
 
 debtRouter.get("/search/:userId", async (req, res, next) => {
-    console.log("/debts/search ran")
+    // console.log("/debts/search ran")
     try {
         const { userId } = req.params
         const { isPaid, isOwedToUser } = req.query
@@ -29,7 +29,7 @@ debtRouter.get("/search/:userId", async (req, res, next) => {
 
 debtRouter.get("/single/:debtId", verifyToken, async (req, res, next) => {
     try {
-        console.log("get debts/:debtId")
+        // console.log("get debts/:debtId")
         const { debtId } = req.params
         const userId = req.user.id
 
@@ -49,7 +49,7 @@ debtRouter.get("/single/:debtId", verifyToken, async (req, res, next) => {
 })
 
 debtRouter.get("/totalDebt", verifyToken, async (req, res, next) => {
-    console.log("/debts/totalDebt ran")
+    // console.log("/debts/totalDebt ran")
     try {
         const userId = req.user.id
 
@@ -85,7 +85,7 @@ debtRouter.get("/totalDebt", verifyToken, async (req, res, next) => {
 
 debtRouter.post("/", verifyToken, async (req, res, next) => {
     try {
-        console.log("DEBT POST ran")
+        // console.log("DEBT POST ran")
         // const { userId } = req.params
         const { otherPartyName, oweAmount, description, isOwedToUser } = req.body
 
@@ -106,7 +106,7 @@ debtRouter.post("/", verifyToken, async (req, res, next) => {
 })
 
 debtRouter.put("/:debtId", verifyToken, async (req, res, next) => {
-    console.log("debt put ran")
+    // console.log("debt put ran")
     try {
         const { debtId } = req.params
         const { otherPartyName, oweAmount, description, isOwedToUser, isPaid } = req.body
@@ -133,7 +133,7 @@ debtRouter.put("/:debtId", verifyToken, async (req, res, next) => {
 
 debtRouter.delete("/:debtId?", verifyToken, async (req, res, next) => {
     try {
-        console.log("debts delete ran")
+        // console.log("debts delete ran")
         const { debtId } = req.params
         const { isPaid } = req.query
 

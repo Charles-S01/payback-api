@@ -4,9 +4,9 @@
     "main": "index.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "start": "nodemon app.js",
-        "devStart": "nodemon app.js",
-        "authStart": "nodemon auth.js",
+        "start": "node app.js",
+        "devStart": "node app.js",
+        "authStart": "node auth.js",
         "main": "node index.js"
     },
     "keywords": [],

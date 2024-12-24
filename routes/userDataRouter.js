@@ -8,10 +8,9 @@ const bcrypt = require("bcryptjs")
 // search for users
 userDataRouter.get("/search/:userId?", verifyToken, async (req, res, next) => {
     try {
-        console.log("users search ran")
+        // console.log("users search ran")
         const { firstName, lastName, username } = req.query
         const { userId } = req.params
-        // console.log("users/search userId:" + userId)
 
         const users = await prisma.user.findMany({
             where: {
@@ -51,38 +50,6 @@ userDataRouter.get("/", verifyToken, async (req, res, next) => {
         next(err)
     }
 })
-
-// sign up
-// userDataRouter.post("/", async (req, res) => {
-//     console.log("userData post middleware ran")
-//     const { firstName, lastName, username, password } = req.body
-//     const foundUsername = await prisma.user.findUnique({
-//         where: {
-//             username: username,
-//         },
-//     })
-//     if (foundUsername) {
-//         return res.status(400).json({ errorMessage: "Username already exists" })
-//     }
-
-//     bcrypt.hash(password, 10, async (err, hashedPassword) => {
-//         if (err) return next(err)
-
-//         // else, store hashedPassword in DB
-//         const user = await prisma.user.create({
-//             data: {
-//                 id: uuidv4(),
-//                 firstName: firstName,
-//                 lastName: lastName,
-//                 username: username,
-//                 password: hashedPassword,
-//             },
-//         })
-//         const users = await prisma.user.findMany()
-//         console.log(users)
-//         res.json({ message: "Successfully added user", user: user })
-//     })
-// })
 
 userDataRouter.put("/", verifyToken, async (req, res, next) => {
     try {

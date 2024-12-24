@@ -8,7 +8,7 @@ const { v4: uuidv4 } = require("uuid")
 
 authRouter.post("/sign-up", async (req, res, next) => {
     try {
-        console.log("userData post middleware ran")
+        // console.log("userData post middleware ran")
         const { firstName, lastName, username, password } = req.body
 
         const foundUsername = await prisma.user.findUnique({
@@ -42,7 +42,7 @@ authRouter.post("/sign-up", async (req, res, next) => {
 })
 
 authRouter.post("/log-in", async (req, res, next) => {
-    console.log("login post ran")
+    // console.log("login post ran")
     try {
         const { username, password } = req.body
         const retreivedUser = await prisma.user.findUnique({
@@ -51,12 +51,12 @@ authRouter.post("/log-in", async (req, res, next) => {
             },
         })
         if (!retreivedUser) {
-            console.log("Invalid username!")
+            // console.log("Invalid username!")
             return res.status(400).json({ message: "Username not found" })
         }
         const match = await bcrypt.compare(password, retreivedUser.password)
         if (!match) {
-            console.log("Invalid password")
+            // console.log("Invalid password")
             return res.status(400).json({ message: "Invalid password" })
         }
 
@@ -83,16 +83,16 @@ authRouter.post("/refresh", (req, res, next) => {
         if (!refreshToken) {
             return res.status(401).json({ message: "No refresh token found" })
         }
-        console.log("/refresh refresh token:", refreshToken)
+        // console.log("/refresh refresh token:", refreshToken)
 
         jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
             if (err) {
                 return res.status(401).json({ message: "Unauthorized. Refresh token verification failed" })
             }
 
-            console.log("decodedToken:", decoded)
+            // console.log("decodedToken:", decoded)
             const token = generateAccessToken(decoded)
-            console.log("new access token:", token)
+            // console.log("new access token:", token)
             res.json({ token })
         })
     } catch (error) {

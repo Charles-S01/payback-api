@@ -22,7 +22,7 @@ moneyRequestsRouter.get("/sent/:userId", verifyToken, async (req, res, next) => 
 
 moneyRequestsRouter.get("/received", verifyToken, async (req, res, next) => {
     try {
-        console.log("/received ran")
+        // console.log("/received ran")
         const userId = req.user.id
 
         const requestsReceived = await prisma.moneyRequest.findMany({
@@ -44,8 +44,7 @@ moneyRequestsRouter.get("/received", verifyToken, async (req, res, next) => {
 
 moneyRequestsRouter.post("/", verifyToken, async (req, res, next) => {
     try {
-        console.log("moneyRequest post ran")
-        // const { creatorId } = req.params
+        // console.log("moneyRequest post ran")
         const { amount, message, receiverId } = req.body
 
         const moneyRequest = await prisma.moneyRequest.create({
@@ -56,7 +55,7 @@ moneyRequestsRouter.post("/", verifyToken, async (req, res, next) => {
                 receiverId: receiverId,
             },
         })
-        console.log(moneyRequest)
+        // console.log(moneyRequest)
         res.json({ message: "Successfuly created money request", moneyRequest })
     } catch (err) {
         next(err)
