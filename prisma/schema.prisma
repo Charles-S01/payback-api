@@ -47,8 +47,3 @@ model MoneyRequest {
   receiver   User?    @relation("RecieveRequest", fields: [receiverId], references: [id])
   receiverId String
 }
-
-enum DebtDirection {
-  OweToMe
-  OweToOther
-}
