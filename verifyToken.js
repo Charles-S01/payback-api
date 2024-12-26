@@ -5,12 +5,11 @@ function verifyToken(req, res, next) {
 
     const bearerHeader = req.headers["authorization"]
     if (!bearerHeader) {
-        // throw new Error("Could not find bearer header")
-        return res.status(404).json({ message: "No bearer header found" })
+        return res.status(404).json({ message: "No bearer header found. Could not read access token" })
     }
     const token = bearerHeader.split(" ")[1]
     if (!token) {
-        return res.status(404).json({ message: "Could not read token" })
+        return res.status(404).json({ message: "Could not read access token" })
     }
 
     jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decodedToken) => {

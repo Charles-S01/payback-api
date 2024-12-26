@@ -11,7 +11,7 @@ const app = express()
 app.use(
     cors({
         // origin: ["http://localhost:5173"],
-        origin: ["https://payback-app-eight.vercel.app"],
+        origin: ["https://payback-app-eight.vercel.app", "http://localhost:5173"],
         credentials: true,
     })
 )
